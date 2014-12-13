@@ -1,0 +1,9 @@
+{
+    "name": "sargon",
+    "description": "D components",
+    "authors": ["various"],
+    "homepage": "https://github.com/DigitalMars/sargon",
+    "license": "BSL-1.0",
+    "targetType": "library",
+    "targetPath": "bin",
+}
