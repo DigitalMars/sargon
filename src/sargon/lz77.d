@@ -6,7 +6,7 @@
     Description:
         Compression is useful for storage and transmission data formats.
         This compresses using a variant of the
-        $(LINK2 https://en.wikipedia.org/wiki/LZ77_and_LZ78, LZ77) compression algorithm.
+        $(WEB en.wikipedia.org/wiki/LZ77_and_LZ78, LZ77) compression algorithm.
         compress() and expand() are meant to be a matched set. Users should
         not depend on the particular data format.
 
@@ -60,7 +60,7 @@
     }
     ---
 
-    References: https://en.wikipedia.org/wiki/LZ77_and_LZ78
+    References: $(WEB en.wikipedia.org/wiki/LZ77_and_LZ78, Wikipedia)
 
     Macros:
         WIKI = Phobos/StdCompress
@@ -68,7 +68,7 @@
     Copyright: Copyright Digital Mars 2013.
     License:   $(WEB www.boost.org/LICENSE_1_0.txt, Boost License 1.0).
     Authors:   $(WEB digitalmars.com, Walter Bright)
-    Source:    $(PHOBOSSRC std/compression/_lz77.d)
+    Source:    $(SARGONSRC src/sargon/_lz77.d)
    */
 
 module sargon.lz77;

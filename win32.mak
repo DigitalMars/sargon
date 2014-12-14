@@ -19,8 +19,9 @@ LFLAGS=-L/map/co
 .d.obj :
 	$(DMD) -c $(DFLAGS) $*
 
-SRC= $S\lz77.d $S\halffloat.d
+SRC= $S\lz77.d $S\halffloat.d $S\sargon.ddoc
 
+DOC=doc\lz77.html doc\halffloat.html
 
 OTHERSRC= win32.mak posix.mak LICENSE README.md dub.json
 
@@ -38,9 +39,16 @@ unittest :
 	$(DMD) -unittest -main -cov -of$O\unittest.exe $(SRC) $(DFLAGS)
 	$O\unittest.exe
 
+doc : $(DOC)
+
+doc\halffloat.html : $S\sargon.ddoc $S\halffloat.d
+	$(DMD) -c -Dddoc $S\sargon.ddoc $S\halffloat.d
+
+doc\lz77.html : $S\sargon.ddoc $S\lz77.d
+	$(DMD) -c -Dddoc $S\sargon.ddoc $S\lz77.d
 
 clean:
-	$(DEL) $O\unittest.exe *.lst
+	$(DEL) $O\unittest.exe *.lst $(DOC)
 
 
 tolf:

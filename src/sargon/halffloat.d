@@ -8,10 +8,10 @@
  *
  * References:
  *      $(WEB en.wikipedia.org/wiki/Half-precision_floating-point_format, Wikipedia)
- * Copyright: Copyright Digital Mars 2012-
+ * Copyright: Copyright Digital Mars 2012-2014
  * License:   $(WEB boost.org/LICENSE_1_0.txt, Boost License 1.0)
  * Authors:   $(WEB digitalmars.com, Walter Bright)
- * Source:    $(PHOBOSSRC std/_halffloat.d)
+ * Source:    $(SARGONSRC src/sargon/_halffloat.d)
  * Macros:
  *   WIKI=Phobos/StdHalffloat
  */
