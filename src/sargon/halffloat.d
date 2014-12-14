@@ -273,8 +273,8 @@ unittest
         { 0x8000, -1.0e-8f },
         { 0x7C00,  1.0e31f },
         { 0xFC00, -1.0e31f },
-        { 0x0000,  1.0e-38f },  // subnormal float
-        { 0x8000, -1.0e-38f },
+        { 0x0000,  1.0e-37f / 10.0f },  // subnormal float
+        { 0x8000, -1.0e-37f / 10.0f },
         { 0x6800,  0x1002p-1 }, // guard
         { 0x6801,  0x1003p-1 }, // guard && sticky
         { 0x6802,  0x1006p-1 }, // guard && (significand & 1)
