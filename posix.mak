@@ -19,10 +19,16 @@ LFLAGS=-L/map/co
 .d.obj :
 	$(DMD) -c $(DFLAGS) $*
 
-SRC= $S/lz77.d $S/halffloat.d
+SRC= $S/lz77.d $S/halffloat.d \
+	$S/sargon.ddoc
 
+PATHSRC= $S/path/package.d $S/path/setext.d
 
-SOURCE= $(SRC) win32.mak posix.mak LICENSE README.md dub.json
+DOC=doc/lz77.html doc/halffloat.html doc/setext.html
+
+OTHERSRC= win32.mak posix.mak LICENSE README.md dub.json
+
+SOURCE= $(SRC) $(PATHSRC) $(OTHERSRC)
 
 all: $B/$(TARGET).a
 
@@ -36,9 +42,19 @@ unittest :
 	$(DMD) -unittest -main -cov -of$O/unittest $(SRC) $(DFLAGS)
 	$O/unittest
 
+doc : $(DOC)
+
+doc/halffloat.html : $S/sargon.ddoc $S/halffloat.d
+	$(DMD) -c -Dddoc $S/sargon.ddoc $S/halffloat.d
+
+doc/lz77.html : $S/sargon.ddoc $S/lz77.d
+	$(DMD) -c -Dddoc $S/sargon.ddoc $S/lz77.d
+
+doc\setext.html : $S/sargon.ddoc $S/path/setext.d
+	$(DMD) -c -Dfdoc/setext.html $S/sargon.ddoc $S/path/setext.d
 
 clean:
-	$(DEL) $O/unittest *.lst
+	$(DEL) $O/unittest *.lst $(DOC)
 
 
 tolf:
