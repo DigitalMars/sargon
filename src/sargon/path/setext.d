@@ -13,7 +13,7 @@
     License:
         $(WEB boost.org/LICENSE_1_0.txt, Boost License 1.0)
     Source:
-        $(SARGONSRC sargon/_path/_setext.d)
+        $(SARGONSRC src/sargon/_path/_setext.d)
 */
 
 module sargon.path.setext;
