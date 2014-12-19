@@ -9,7 +9,7 @@ S=src\sargon
 O=obj
 B=bin
 
-TARGET=undead
+TARGET=sargon
 
 DFLAGS=-g -Isrc/
 LFLAGS=-L/map/co
@@ -22,9 +22,9 @@ LFLAGS=-L/map/co
 SRC= $S\lz77.d $S\halffloat.d \
 	$S\std.ddoc
 
-PATHSRC= $S\path\package.d $S\path\setext.d
+PATHSRC= $S\path\package.d $S\path\setext.d $S\path\stripext.d
 
-DOC=doc\lz77.html doc\halffloat.html doc\setext.html
+DOC=doc\lz77.html doc\halffloat.html doc\setext.html doc\stripext.html
 
 OTHERSRC= win32.mak posix.mak LICENSE README.md dub.json
 
@@ -41,7 +41,7 @@ $B\$(TARGET).lib : $(SRC)
 
 
 unittest :
-	$(DMD) -unittest -main -cov -of$O\unittest.exe $(SRC) $(DFLAGS)
+	$(DMD) -unittest -main -cov -of$O\unittest.exe $(SRC) $(PATHSRC) $(DFLAGS)
 	$O\unittest.exe
 
 doc : $(DOC)
@@ -54,6 +54,9 @@ doc\lz77.html : $S\std.ddoc $S\lz77.d
 
 doc\setext.html : $S\std.ddoc $S\path\setext.d
 	$(DMD) -c -Dfdoc\setext.html $S\std.ddoc $S\path\setext.d
+
+doc\stripext.html : $S\std.ddoc $S\path\stripext.d
+	$(DMD) -c -Dfdoc\stripext.html $S\std.ddoc $S\path\stripext.d
 
 clean:
 	$(DEL) $O\unittest.exe *.lst $(DOC)

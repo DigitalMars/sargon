@@ -34,7 +34,7 @@ DDOC = <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 
 <body>
 <div id="heading">
-        <a href="http://digitalmars.com/sargon/halffloat.html"><img src="images/Sargon_of_Akkad.jpg" width="125" height="95" border="0" alt="www.digitalmars.com" align="left"></a>
+        <a href="http://digitalmars.com/sargon/halffloat.html"><img src="images/Sargon_of_Akkad.jpg" width="95" height="100" border="0" alt="www.digitalmars.com" align="left"></a>
         <a id="d-language" href="/sargon/halffloat.html">Sargon Component Library for D</a>
 
 
@@ -106,6 +106,7 @@ NAVIGATION_PHOBOS=
         $(LI <a href="halffloat.html" title="halffloat">sargon.halffloat</a>)
         $(LI <a href="lz77.html" title="LZ77 compression algorithms">sargon.lz77</a>)
         $(LI <a href="setext.html" title="set filespec extension">sargon.path.setext</a>)
+        $(LI <a href="stripext.html" title="remove filespec extension">sargon.path.stripext</a>)
     )
 </div>
 
