@@ -1,3 +1,0 @@
-
-WEB=$(LINK2 http://$1,$2)
-SARGONSRC=$(LINK2 https://github.com/DigitalMars/sargon/blob/master/$0, $0)
