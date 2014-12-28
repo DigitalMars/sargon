@@ -92,7 +92,7 @@ TOP=
 <div id="toctop">
     $(UL
         $(LI <a href="http://digitalmars.com" title="Digital Mars">Digital Mars</a>)
-        $(LI <a href="http://dlang.org" title="D Programming Language">D</a>)
+        $(LI <a href="http://dlang.org" title="D Programming Language">D Language</a>)
         $(LI <a href="http://dlang.org/phobos/index.html" title="D Runtime Library">Phobos</a>)
         $(LI <a href="http://github.com/DigitalMars/Sargon" title="Sargon source code">Source Code</a>)
     )

@@ -24,6 +24,8 @@ import std.range;
 import std.traits : isSomeChar;
 import std.utf : byChar;
 
+import sargon.path.stripext;
+
 /** Algorithm that accepts a _path as an InputRange and a file extension as an InputRange,
     and returns an InputRange that produces a char string containing the _path given
     by $(D path), but where
@@ -42,7 +44,7 @@ auto setExt(R1, R2)(R1 path, R2 ext)
     if (isInputRange!R1 && isSomeChar!(ElementType!R1) &&
         isInputRange!R2 && isSomeChar!(ElementType!R2))
 {
-    return chain(path.stripExtension().byChar(),
+    return chain(path.stripExt().byChar(),
                  "."[0 .. 1 - cast(size_t)(ext.empty || ext.front() == '.')].byChar(),
                  ext.byChar());
 }

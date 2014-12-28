@@ -1,6 +1,6 @@
 // Written in the D programming language.
 
-/** This module is used to manipulate _path strings.
+/** This module contains stripExt().
 
     Authors:
         Lars Tandle Kyllingstad,
@@ -18,16 +18,19 @@
 module sargon.path.stripext;
 
 
-import std.algorithm;
-import std.array;
-import std.conv;
 import std.range;
-import std.string;
 import std.traits;
-import std.path;
 import std.utf;
 
-/** Returns slice of path[] with the extension stripped off.
+/** Returns slice of $(D path[]) with the extension stripped off.
+
+    stripExt is an algorithm that does not allocate nor throw, it is $(D pure) and $(D @safe).
+
+    Params:
+        path = a $(WEB dlang.org/phobos/std_range.html#.isRandomAccessRange, RandomAccessRange) that can be sliced.
+
+    Returns:
+        a slice of path
 
     Examples:
     ---
@@ -38,22 +41,147 @@ import std.utf;
     assert (stripExt(".file")          == ".file");
     assert (stripExt(".file.ext")      == ".file");
     assert (stripExt("dir/file.ext")   == "dir/file");
+
+    {
+	import std.internal.scopebuffer;
+
+        char[10] tmpbuf = void;
+        auto buf = ScopeBuffer!char(tmpbuf);
+        scope(exit) buf.free();
+
+        buf.length = 0;
+        "file.ext".byChar().stripExt().copy(&buf);
+        assert(buf[] == "file");
+    }
     ---
 */
 auto stripExt(R)(R path)
-    if (isRandomAccessRange!R && hasSlicing!R && isSomeChar!(ElementType!R) ||
-        isNarrowString!R)
-//inout(C)[] stripExt(C)(inout(C)[] path)  @safe pure nothrow @nogc
-//    if (isSomeChar!C)
 {
-    auto i = extSeparatorPos(path);
-    if (i == -1) return path;
-    else return path[0 .. i];
+    static if (isRandomAccessRange!R && hasSlicing!R && isSomeChar!(ElementType!R) ||
+        isNarrowString!R)
+    {
+	auto i = extSeparatorPos(path);
+	return (i == -1) ? path : path[0 .. i];
+    }
+    else
+    {
+	import core.stdc.stdio;
+
+	alias tchar = Unqual!(ElementEncodingType!R);
+	static struct stripExtImpl
+	{
+	    this(ref R r)
+	    {
+		this.r = r;
+	    }
+
+	    @property bool empty()
+	    {
+		if (haveChar)
+		    return false;
+		while (1)
+		{
+		    if (i < nLeft)
+		    {
+			ch = buf[i];
+			++i;
+			lastIsSeparator = isSeparator(ch);
+			assert(lastIsSeparator == false);
+			haveChar = true;
+			return false;
+		    }
+		    if (r.empty)
+			return true;
+
+		    ch = r.front;
+		    r.popFront;
+		    if (ch != '.' ||
+                        lastIsSeparator)
+		    {
+			lastIsSeparator = isSeparator(ch);
+			haveChar = true;
+			return false;
+		    }
+		    nLeft = 0;
+		    while (1)
+		    {
+			buf[nLeft++] = ch;
+			if (r.empty)
+			{
+			    nLeft = 0;
+			    break;
+			}
+			ch = r.front;
+			if (ch == '.' ||
+                            isSeparator(ch) ||
+			    nLeft == buf.length)
+			{
+			    break;
+			}
+			r.popFront();
+		    }
+		    i = 0;
+		}
+	    }
+
+	    @property auto front()
+	    {
+		return ch;
+	    }
+
+	    void popFront()
+	    {
+		haveChar = false;
+	    }
+
+	  private:
+	    R r;
+	    bool lastIsSeparator = true;
+	    bool haveChar = false;
+	    uint nLeft;
+	    uint i;
+	    tchar ch;
+	    tchar[FILENAME_MAX] buf = void;
+	}
+	return stripExtImpl(path);
+    }
 }
 
+// Turn an array into an InputRange, used for unittesting
+
+private auto ref byInputRange(T)(T[] s)
+{
+    static struct byInputRangeImpl
+    {
+	this(T[] s)
+	{
+	    this.s = s;
+	}
+
+	@property bool empty()
+	{
+	    return s.length == 0;
+	}
+
+	@property auto front()
+	{
+	    return s[0];
+	}
+
+	void popFront()
+	{
+	    s = s[1 .. s.length];
+	}
+
+      private:
+	T[] s;
+    }
+    return byInputRangeImpl(s);
+}
 
 unittest
 {
+    import std.algorithm;
     import std.internal.scopebuffer;
 
     assert (stripExt("file") == "file");
@@ -76,6 +204,38 @@ unittest
         buf.length = 0;
         "file.ext".byChar().stripExt().copy(&buf);
         assert(buf[] == "file");
+    }
+
+    void testrange(string f, string result)
+    {
+	char[50] s;
+	int i;
+	foreach (c; f.byInputRange().stripExt())
+	{
+	    s[i++] = c;
+	}
+	assert(s[0 .. i] == result);
+    }
+    testrange("file", "file");
+    testrange("file.", "file");
+    testrange("file.ext", "file");
+    testrange("file.ext.", "file.ext");
+    testrange("file.ext1.ext2", "file.ext1");
+    testrange(".foo", ".foo");
+    testrange("dir/file", "dir/file");
+    testrange("dir/file.ext", "dir/file");
+    testrange("dir/file.ext1.ext2", "dir/file.ext1");
+    testrange("dir/.foo", "dir/.foo");
+    testrange("dir/.foo.ext", "dir/.foo");
+
+    {   // various boundary conditions
+	auto r = "f.o".byInputRange.stripExt;
+	assert(!r.empty);
+	assert(!r.empty);
+	r.popFront();
+	r.popFront();
+	r.popFront();
+	assert(r.empty);
     }
 
     version(Windows)
