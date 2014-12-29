@@ -43,7 +43,7 @@ import std.utf;
     assert (stripExt("dir/file.ext")   == "dir/file");
 
     {
-	import std.internal.scopebuffer;
+        import std.internal.scopebuffer;
 
         char[10] tmpbuf = void;
         auto buf = ScopeBuffer!char(tmpbuf);
@@ -60,129 +60,100 @@ auto stripExt(R)(R path)
     static if (isRandomAccessRange!R && hasSlicing!R && isSomeChar!(ElementType!R) ||
         isNarrowString!R)
     {
-	auto i = extSeparatorPos(path);
-	return (i == -1) ? path : path[0 .. i];
+        auto i = extSeparatorPos(path);
+        return (i == -1) ? path : path[0 .. i];
     }
     else
     {
-	import core.stdc.stdio;
+        import core.stdc.stdio;
 
-	alias tchar = Unqual!(ElementEncodingType!R);
-	static struct stripExtImpl
-	{
-	    this(ref R r)
-	    {
-		this.r = r;
-	    }
+        alias tchar = Unqual!(ElementEncodingType!R);
+        static struct stripExtImpl
+        {
+            this(ref R r)
+            {
+                this.r = r;
+            }
 
-	    @property bool empty()
-	    {
-		if (haveChar)
-		    return false;
-		while (1)
-		{
-		    if (i < nLeft)
-		    {
-			ch = buf[i];
-			++i;
-			lastIsSeparator = isSeparator(ch);
-			assert(lastIsSeparator == false);
-			haveChar = true;
-			return false;
-		    }
-		    if (r.empty)
-			return true;
+            @property bool empty()
+            {
+                if (haveChar)
+                    return false;
+                while (1)
+                {
+                    if (i < nLeft)
+                    {
+                        ch = buf[i];
+                        ++i;
+                        lastIsSeparator = isSeparator(ch);
+                        assert(lastIsSeparator == false);
+                        haveChar = true;
+                        return false;
+                    }
+                    if (r.empty)
+                        return true;
 
-		    ch = r.front;
-		    r.popFront;
-		    if (ch != '.' ||
+                    ch = r.front;
+                    r.popFront;
+                    if (ch != '.' ||
                         lastIsSeparator)
-		    {
-			lastIsSeparator = isSeparator(ch);
-			haveChar = true;
-			return false;
-		    }
-		    nLeft = 0;
-		    while (1)
-		    {
-			buf[nLeft++] = ch;
-			if (r.empty)
-			{
-			    nLeft = 0;
-			    break;
-			}
-			ch = r.front;
-			if (ch == '.' ||
+                    {
+                        lastIsSeparator = isSeparator(ch);
+                        haveChar = true;
+                        return false;
+                    }
+                    nLeft = 0;
+                    while (1)
+                    {
+                        buf[nLeft++] = ch;
+                        if (r.empty)
+                        {
+                            nLeft = 0;
+                            break;
+                        }
+                        ch = r.front;
+                        if (ch == '.' ||
                             isSeparator(ch) ||
-			    nLeft == buf.length)
-			{
-			    break;
-			}
-			r.popFront();
-		    }
-		    i = 0;
-		}
-	    }
+                            nLeft == buf.length)
+                        {
+                            break;
+                        }
+                        r.popFront();
+                    }
+                    i = 0;
+                }
+            }
 
-	    @property auto front()
-	    {
-		return ch;
-	    }
+            @property auto front()
+            {
+                return ch;
+            }
 
-	    void popFront()
-	    {
-		haveChar = false;
-	    }
+            void popFront()
+            {
+                haveChar = false;
+            }
 
-	  private:
-	    R r;
-	    bool lastIsSeparator = true;
-	    bool haveChar = false;
-	    uint nLeft;
-	    uint i;
-	    tchar ch;
-	    tchar[FILENAME_MAX] buf = void;
-	}
-	return stripExtImpl(path);
+          private:
+            R r;
+            bool lastIsSeparator = true;
+            bool haveChar = false;
+            uint nLeft;
+            uint i;
+            tchar ch;
+            tchar[FILENAME_MAX] buf = void;
+        }
+        return stripExtImpl(path);
     }
 }
 
-// Turn an array into an InputRange, used for unittesting
-
-private auto ref byInputRange(T)(T[] s)
-{
-    static struct byInputRangeImpl
-    {
-	this(T[] s)
-	{
-	    this.s = s;
-	}
-
-	@property bool empty()
-	{
-	    return s.length == 0;
-	}
-
-	@property auto front()
-	{
-	    return s[0];
-	}
-
-	void popFront()
-	{
-	    s = s[1 .. s.length];
-	}
-
-      private:
-	T[] s;
-    }
-    return byInputRangeImpl(s);
-}
 
 unittest
 {
     import std.algorithm;
     import std.internal.scopebuffer;
+
+    import sargon.array.asinputrange;
 
     assert (stripExt("file") == "file");
     assert (stripExt("file.ext"w) == "file");
@@ -208,13 +179,13 @@ unittest
 
     void testrange(string f, string result)
     {
-	char[50] s;
-	int i;
-	foreach (c; f.byInputRange().stripExt())
-	{
-	    s[i++] = c;
-	}
-	assert(s[0 .. i] == result);
+        char[50] s;
+        int i;
+        foreach (c; f.asInputRange().stripExt())
+        {
+            s[i++] = c;
+        }
+        assert(s[0 .. i] == result);
     }
     testrange("file", "file");
     testrange("file.", "file");
@@ -229,13 +200,13 @@ unittest
     testrange("dir/.foo.ext", "dir/.foo");
 
     {   // various boundary conditions
-	auto r = "f.o".byInputRange.stripExt;
-	assert(!r.empty);
-	assert(!r.empty);
-	r.popFront();
-	r.popFront();
-	r.popFront();
-	assert(r.empty);
+        auto r = "f.o".byInputRange.stripExt;
+        assert(!r.empty);
+        assert(!r.empty);
+        r.popFront();
+        r.popFront();
+        r.popFront();
+        assert(r.empty);
     }
 
     version(Windows)
@@ -276,8 +247,8 @@ private ptrdiff_t extSeparatorPos(R)(const R path)
 private bool isSeparator(dchar c) @safe pure nothrow @nogc
 {
     version (Windows)
-	return c == ':' || c == '/' || c == '\\';
+        return c == ':' || c == '/' || c == '\\';
     else
-	return c == '/';
+        return c == '/';
 }
 
