@@ -2,7 +2,7 @@
     "name": "sargon",
     "description": "D components",
     "authors": ["Walter Bright"],
-    "homepage": "https://github.com/DigitalMars/sargon",
+    "homepage": "http://digitalmars.com/sargon/halffloat.html",
     "license": "BSL-1.0",
     "targetType": "library",
     "targetPath": "bin",
