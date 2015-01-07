@@ -20,13 +20,14 @@ LFLAGS=-L/map/co
 	$(DMD) -c $(DFLAGS) $*
 
 SRC= $S/lz77.d $S/halffloat.d \
+	$S/textmac.d \
 	$S/std.ddoc
 
 ARRAYSRC= $S/array/package.d $S/array/asinputrange.d
 
 PATHSRC= $S/path/package.d $S/path/setext.d $S/path/stripext.d
 
-DOC=doc/lz77.html doc/halffloat.html doc/asinputrange.html doc/setext.html doc/stripext.html
+DOC=doc/lz77.html doc/halffloat.html doc/textmac.html doc/asinputrange.html doc/setext.html doc/stripext.html
 
 OTHERSRC= win32.mak posix.mak LICENSE README.md dub.json
 
@@ -53,6 +54,9 @@ doc/halffloat.html : $S/std.ddoc $S/halffloat.d
 
 doc/lz77.html : $S/std.ddoc $S/lz77.d
 	$(DMD) -c -Isrc/ -Dddoc $S/std.ddoc $S/lz77.d
+
+doc/textmac.html : $S/std.ddoc $S/textmac.d
+	$(DMD) -c -Isrc/ -Dddoc $S/std.ddoc $S/textmac.d
 
 doc/asinputrange.html : $S/std.ddoc $S/array/asinputrange.d
 	$(DMD) -c -Isrc/ -Dfdoc/asinputrange.html $S/std.ddoc $S/array/asinputrange.d

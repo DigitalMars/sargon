@@ -200,7 +200,7 @@ unittest
     testrange("dir/.foo.ext", "dir/.foo");
 
     {   // various boundary conditions
-        auto r = "f.o".byInputRange.stripExt;
+        auto r = "f.o".asInputRange.stripExt;
         assert(!r.empty);
         assert(!r.empty);
         r.popFront();

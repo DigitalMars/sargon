@@ -105,6 +105,7 @@ NAVIGATION_PHOBOS=
     $(UL
         $(LI <a href="halffloat.html" title="halffloat">halffloat</a>)
         $(LI <a href="lz77.html" title="LZ77 compression algorithms">lz77</a>)
+        $(LI <a href="textmac.html" title="textmac">textmac</a>)
         $(LI <a href="asinputrange.html" title="treat as Input Range">array.asinputrange</a>)
         $(LI <a href="setext.html" title="set filespec extension">path.setext</a>)
         $(LI <a href="stripext.html" title="remove filespec extension">path.stripext</a>)
