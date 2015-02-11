@@ -870,7 +870,7 @@ unittest
         }
     }
 
-    void testRange(ubyte[] src1, ref Adapter src)
+    void testRange(InputRange)(ubyte[] src1, ref InputRange src)
     {
         auto di = new ubyte[maxCompressedSize(src.length)];
         auto result = src.compress().copy(di);

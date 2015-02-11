@@ -33,21 +33,25 @@ auto ref asInputRange(E)(E[] a)
 
         @property bool empty()
         {
-            return a.length == 0;
+            hasData = (a.length != 0);
+            return !hasData;
         }
 
-        @property auto front()
+        @property ref E front()
         {
+            assert(hasData);
             return a[0];
         }
 
         void popFront()
         {
-            a = a[1 .. a.length];
+            a = a[1 .. $];
+            hasData = false;
         }
 
       private:
         E[] a;
+        bool hasData;
     }
     return asInputRangeImpl(a);
 }
@@ -82,3 +86,45 @@ unittest
     }
 }
 
+private import std.range;
+
+/***************************************
+ * Takes an InputRange as input and verifies
+ * that it can be iterated following protocol.
+ *
+ * Params:
+ *      r = is an InputRange
+ */
+
+void testInputRange(R)(R r) if (isInputRange!R)
+{
+    static if (isInfinite!R)
+    {
+        foreach (i; 0 .. 10)
+        {
+            while (!r.empty)
+            {
+                auto e = r.front;
+                auto e2 = r.front;
+                assert(e == e2);
+                r.popFront();
+            }
+        }
+    }
+    else
+    {
+        while (!r.empty)
+        {
+            auto e = r.front;
+            auto e2 = r.front;
+            assert(e == e2);
+            r.popFront();
+        }
+    }
+}
+
+///
+unittest
+{
+    testInputRange(asInputRange("betty"));
+}

@@ -72,7 +72,7 @@ clean:
 
 
 tolf:
-	tolf $(SOURCE)
+	tolf $(SOURCE) $(OTHERSRC)
 
 
 detab:
