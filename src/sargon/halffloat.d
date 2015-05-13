@@ -390,12 +390,14 @@ version (unittest) import std.stdio;
 
 unittest
 {
-    HalfFloat h = hf!27.2f;
-    HalfFloat j = cast(HalfFloat)( hf!3.5f + hf!5 );
+    HalfFloat h = hf!27.2;
+    HalfFloat j = cast(HalfFloat)( hf!3.5 + hf!5 );
     HalfFloat f = HalfFloat(0.0f);
 
+    float k = j + h;
+
     f.s = 0x1400;
-    writeln("1.0009765625 ", 1.0f + cast(float)f);
+    writeln("1.0009765625 ", 1.0f + f);
     assert(f == HalfFloat.epsilon);
 
     f.s = 0x0400;

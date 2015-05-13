@@ -103,6 +103,7 @@ NAVIGATION_PHOBOS=
 <div class="navblock">
     $(H2 sargon.)
     $(UL
+        $(LI <a href="dumphex.html" title="dumphex">dumphex</a>)
         $(LI <a href="halffloat.html" title="halffloat">halffloat</a>)
         $(LI <a href="lz77.html" title="LZ77 compression algorithms">lz77</a>)
         $(LI <a href="textmac.html" title="textmac">textmac</a>)
