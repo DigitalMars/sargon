@@ -441,7 +441,7 @@ string expand(const(char)[] text, string[string] table, bool html = false)
                                 )
                                )
                         {   // Recursive expansion; just leave in place
-                            ;
+                        
                         }
                         else
                         {
